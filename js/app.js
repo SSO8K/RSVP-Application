@@ -1,6 +1,23 @@
 const form = document.getElementById('registrar');
 const input = form.querySelector('input');
+const mainDiv = document.querySelector('.main');
 const ul = document.getElementById('invitedList');
+
+//Creating a new div element to hold label and checkbox.
+const div = document.createElement('div');
+//creating a new label.
+const filterLabel = document.createElement('label');
+//creating the checkbox for the label.
+const filterCheckbox = document.createElement('input');
+//setting the display text for the label.
+filterLabel.textContent = "Hide those who haven't responded";
+//setting the input type to  checkbox.
+filterCheckbox.type = 'checkbox';
+//appedning label and checkbox to the div.
+div.appendChild(filterLabel);
+div.appendChild(filterCheckbox);
+//inserting the new div and ul elements before the mainDiv.
+mainDiv.insertBefore(div, ul);
 
 function createLI(text) {
     //creates the new li and sets it's text.
