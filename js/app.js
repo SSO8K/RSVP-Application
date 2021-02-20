@@ -51,32 +51,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function createLI(text) {
-        //creates the new li and sets it's text.
-        const li = document.createElement('li');
-        const span = document.createElement('span');
-        span.textContent = text;
-        li.appendChild(span);
-        //creates the label and sets text.
-        const label = document.createElement('label');
-        label.textContent = 'Confirmed';
-        //creates checkbox 
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        //appends the elements to the ul "invitedList"
-        label.appendChild(checkbox);
-        li.appendChild(label);
-        
-        //creates edit button element and sets text.
-        const editButton = document.createElement('button');
-        editButton.textContent = 'edit';
-        //appends the button to the li.
-        li.appendChild(editButton);
+        function createElement(elementName, property, value) {
+            const element = document.createElement(elementName);
+            element[property] = value;
+            return element;
+        }
 
-        //creates remove button element and sets text.
-        const removeButton = document.createElement('button');
-        removeButton.textContent = 'remove';
-        //appends the button to the li.
-        li.appendChild(removeButton);
+        function appendToLI(elementName, property, value) {
+            const element = createElement(elementName, property, value);
+            li.appendChild(element);
+            return element;
+        }
+
+        //creates a new li element.
+        const li = document.createElement('li');
+        //calls to the appendToLI func to create/append the span, label & checkbox.
+        appendToLI('span', 'textContent', text);
+        appendToLI('label', 'textContent', 'Confirmed')
+            .appendChild(createElement('input', 'type', 'checkbox'));
+       //calls to the appendToLI func to create/append the edit button.
+        appendToLI('button', 'textContent', 'edit');
+        //calls to the appendToLI func to create/append the remove button.
+        appendToLI('button', 'textContent', 'remove');
         return li;
     }
 
@@ -112,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    //Event listener for the remove and edit buttons.
+    //Event listener for the remove, edit & save buttons.
     ul.addEventListener('click', (e) => {
         //runs if the target element is a button.
         if (e.target.tagName === 'BUTTON') {
@@ -120,28 +116,34 @@ document.addEventListener('DOMContentLoaded', () => {
             //travels up the dom tree to the grandparent node.
             const li = button.parentNode;
             const ul = li.parentNode;
-            //examines the text content of the button.
-            if (button.textContent === 'remove') {
+            const action = button.textContent;
+            const nameActions = {
                 //removes the element from the parent ul.
-                ul.removeChild(li);
-            //puts the program into an edit state upon click.
-            } else if (button.textContent === 'edit') {
-                const span = li.firstElementChild;
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.value = span.textContent;
-                li.insertBefore(input, span);
-                li.removeChild(span);
-                button.textContent = 'save';
-            //handles the save button events.   
-            } else if (button.textContent === 'save') {
-                const input = li.firstElementChild;
-                const span = document.createElement('span');
-                span.textContent = input.value;
-                li.insertBefore(span, input);
-                li.removeChild(input);
-                button.textContent = 'edit';
-            } 
+                remove: () => {
+                    ul.removeChild(li);
+                },
+                //puts the program into an edit state upon click.
+                edit: () => {
+                    const span = li.firstElementChild;
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = span.textContent;
+                    li.insertBefore(input, span);
+                    li.removeChild(span);
+                    button.textContent = 'save';
+                },
+                //handles the save button events.
+                save: () => {
+                    const input = li.firstElementChild;
+                    const span = document.createElement('span');
+                    span.textContent = input.value;
+                    li.insertBefore(span, input);
+                    li.removeChild(input);
+                    button.textContent = 'edit';
+                }  
+            };
+            //select and run action in button's name.
+            nameActions[action]();
         }
     });
 });
