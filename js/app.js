@@ -3,6 +3,7 @@ const input = form.querySelector('input');
 const mainDiv = document.querySelector('.main');
 const ul = document.getElementById('invitedList');
 
+
 //Creating a new div element to hold label and checkbox.
 const div = document.createElement('div');
 //creating a new label.
@@ -18,6 +19,33 @@ div.appendChild(filterLabel);
 div.appendChild(filterCheckbox);
 //inserting the new div and ul elements before the mainDiv.
 mainDiv.insertBefore(div, ul);
+filterCheckbox.addEventListener('change', (e) => {
+    const isChecked = e.target.checked;
+    const lis = ul.children;
+    //This branch fires is the hide checkbox is checked.
+    if (isChecked) {
+        //loops over all the list items (guests).
+        for (let i = 0; i < lis.length; i++) {
+            let li = lis[i];
+            if (li.className === 'responded') {
+                //the empty string allows it to keep previous styles.
+                li. style.display = '';
+                //hides the list item (guest) if not responded.
+            } else {
+                li.style.display = 'none';
+            }
+        }
+    //This branch fires if the hide checkbox is not checked.    
+    } else {
+        //loops over all the list items (guests).
+        for (let i = 0; i < lis.length; i++) {
+            let li = lis[i];
+            //the empty string allows it to keep previous styles.
+            li.style.display = '';
+        }
+    }
+})
+
 
 function createLI(text) {
     //creates the new li and sets it's text.
@@ -79,6 +107,7 @@ ul.addEventListener('change', (e) => {
         listItem.className = '';
     }
 });
+
 
 //Event listener for the remove and edit buttons.
 ul.addEventListener('click', (e) => {
